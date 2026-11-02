@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Félix Ramírez — Laboratorio público</title>
+<meta name="description" content="Proyectos de datos construidos y desplegados. Cada uno publica qué NO sabe.">
+<link rel="icon" href="logo.png">
+<style>
+/* ── La paleta es la misma de los gráficos de Sportalyze, para que
+      una pieza compartida en LinkedIn y esta página se reconozcan
+      como lo mismo sin tener que leer el nombre. ───────────────── */
+:root{
+  --fondo:#0b1220; --panel:#131c2e; --linea:#1e2a42; --borde:#243247;
+  --texto:#e9edf3; --dim:#8b97ad; --tenue:#5a6579;
+  --acento:#0ea5e9; --oro:#e3b341; --bien:#3fb950; --mal:#ff4d5e;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--fondo);color:var(--texto);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  padding:0 16px;
+}
+.marco{max-width:880px;margin:0 auto;padding:56px 0 72px}
+a{color:var(--acento);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ── Cabecera ───────────────────────────────────────────────── */
+header{display:flex;align-items:center;gap:20px;margin-bottom:8px}
+header img{width:58px;height:auto;flex:0 0 auto}
+h1{font-size:30px;line-height:1.2;margin:0;font-weight:700;letter-spacing:-.01em}
+.sub{color:var(--dim);font-size:15px;margin:2px 0 0}
+.intro{margin:28px 0 0;font-size:17px;max-width:62ch}
+.intro strong{color:var(--oro)}
+
+/* ── La regla ───────────────────────────────────────────────── */
+.regla{
+  margin:30px 0 44px;padding:20px 22px;background:var(--panel);
+  border:1px solid var(--borde);border-left:3px solid var(--oro);border-radius:10px;
+}
+.regla h2{margin:0 0 8px;font-size:15px;letter-spacing:.09em;text-transform:uppercase;color:var(--oro)}
+.regla p{margin:0;color:var(--dim);font-size:15px}
+
+/* ── Secciones ──────────────────────────────────────────────── */
+h2.sec{
+  font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--tenue);
+  margin:44px 0 16px;padding-bottom:8px;border-bottom:1px solid var(--linea);
+}
+/* ── Tarjetas de proyecto ───────────────────────────────────── */
+.p{
+  background:var(--panel);border:1px solid var(--borde);border-radius:12px;
+  padding:22px 24px;margin-bottom:16px;
+}
+.p.esperando{opacity:.72;border-style:dashed}
+.ptit{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.ptit h3{margin:0;font-size:20px;font-weight:700}
+.estado{
+  font-size:11px;letter-spacing:.07em;text-transform:uppercase;font-weight:700;
+  padding:3px 9px;border-radius:999px;white-space:nowrap;
+}
+.vivo{background:rgba(63,185,80,.14);color:var(--bien);border:1px solid rgba(63,185,80,.35)}
+.pronto{background:rgba(227,179,65,.12);color:var(--oro);border:1px solid rgba(227,179,65,.33)}
+.obra{background:rgba(139,151,173,.1);color:var(--dim);border:1px solid var(--borde)}
+.p p{margin:0 0 12px;color:var(--texto);font-size:15.5px}
+.ensena{color:var(--dim);font-size:14px;margin:0 0 14px !important}
+.ensena b{color:var(--texto);font-weight:600}
+.nosabe{
+  margin:0 0 14px !important;padding:11px 14px;border-radius:8px;
+  background:rgba(227,179,65,.07);border:1px solid rgba(227,179,65,.22);
+  color:var(--dim);font-size:14px;
+}
+.nosabe b{color:var(--oro);font-weight:700}
+.enlaces{display:flex;gap:9px;flex-wrap:wrap}
+.enlaces a{
+  font-size:13.5px;padding:6px 13px;border:1px solid var(--borde);border-radius:7px;
+  color:var(--texto);background:rgba(255,255,255,.015);
+}
+.enlaces a:hover{border-color:var(--acento);color:var(--acento);text-decoration:none}
+
+/* ── Lo que viene ───────────────────────────────────────────── */
+.lista{display:grid;grid-template-columns:repeat(auto-fit,minmax(248px,1fr));gap:11px}
+.mini{
+  background:var(--panel);border:1px solid var(--borde);border-radius:9px;
+  padding:13px 15px;font-size:14px;
+}
+.mini b{display:block;color:var(--texto);margin-bottom:3px;font-size:14.5px}
+.mini span{color:var(--tenue);font-size:13px}
+
+footer{
+  margin-top:56px;padding-top:22px;border-top:1px solid var(--linea);
+  color:var(--tenue);font-size:13.5px;
+}
+footer a{color:var(--dim)}
+@media(max-width:560px){
+  .marco{padding:36px 0 56px}
+  h1{font-size:25px} header img{width:48px} header{gap:15px}
+  .p{padding:18px 17px}
+}
+</style>
+</head>
+<body>
+<div class="marco">
+
+<header>
+  <img src="logo.png" alt="">
+  <div>
+    <h1>Félix Ramírez</h1>
+    <p class="sub">Ingeniería de datos · Python · Granada</p>
+  </div>
+</header>
+
+<p class="intro">
+  Construyo cosas con datos y las dejo funcionando en internet, con su código abierto
+  y sus pruebas. <strong>Y cada una publica qué NO sabe.</strong>
+</p>
+
+<div class="regla">
+  <h2>La regla</h2>
+  <p>
+    Hay miles de paneles bonitos. Casi ninguno dice dónde falla. Cada proyecto de aquí lleva
+    una página de método —generada leyendo su propio código, no escrita a mano— que dice de
+    dónde sale cada cifra, qué no mide y cuándo la herramienta prefiere contestar
+    «no lo sé» antes que darte un número inventado. Un hueco explicado vale más que un dato
+    inventado.
+  </p>
+</div>
+
+<h2 class="sec">Funcionando</h2>
+
+<div class="p">
+  <div class="ptit">
+    <h3>Sportalyze</h3><span class="estado vivo">en línea</span>
+  </div>
+  <p>
+    Analítica de fútbol de las cinco grandes ligas en español. Scouting por percentiles
+    con encogido por minutos, comparador, informe post-partido, simulador de liga y una
+    máquina semanal que busca a quien no cuadra con su xG — corrigiendo por mirar a mucha
+    gente a la vez.
+  </p>
+  <p class="ensena">
+    <b>Qué hay dentro:</b> FastAPI · Understat y football-data.org · percentiles con
+    encogido · K-Means y PCA · Benjamini-Hochberg · 404 pruebas · desplegado.
+  </p>
+  <p class="nosabe">
+    <b>Lo que no sabe:</b> no puntúa a defensas ni porteros, porque la fuente abierta no
+    publica nada defensivo de una liga en curso. Devuelve un 503 con el motivo escrito en
+    vez de un número. Son cinco las cosas a las que se niega, y están todas listadas en su
+    pantalla de Método.
+  </p>
+  <div class="enlaces">
+    <a href="https://sportalyze.onrender.com">Abrir</a>
+    <a href="https://github.com/felixrr87/sportalyze">Código</a>
+    <a href="https://sportalyze.onrender.com/api/metodo">Método</a>
+  </div>
+</div>
+
+<div class="p esperando">
+  <div class="ptit">
+    <h3>turnero</h3><span class="estado pronto">publicándose</span>
+  </div>
+  <p>
+    Librería de Python para <code>asyncio</code>: límite de peticiones por ventana
+    deslizante y agrupación de llamadas idénticas simultáneas. Sale de un servicio real,
+    no de un ejemplo — es lo que hizo falta para abrir Sportalyze a la gente con una clave
+    de diez peticiones por minuto compartidas por todos los visitantes.
+  </p>
+  <p class="ensena">
+    <b>Qué hay dentro:</b> asyncio · ventana deslizante · <i>single-flight</i> ·
+    sin dependencias · tipado · 20 pruebas en tres versiones de Python.
+  </p>
+  <p class="nosabe">
+    <b>Lo que no sabe:</b> vive en la memoria de un proceso, así que con dos
+    <i>workers</i> no protege nada. Y hay una prueba que borré: decía comprobar que el
+    <code>sleep</code> está fuera del cerrojo y, al romper el código a propósito, siguió en
+    verde. Está contado en el README.
+  </p>
+  <div class="enlaces">
+    <a href="https://github.com/felixrr87/turnero">Código</a>
+  </div>
+</div>
+
+<h2 class="sec">En construcción</h2>
+
+<div class="p esperando">
+  <div class="ptit">
+    <h3>El Observatorio</h3><span class="estado obra">empezando</span>
+  </div>
+  <p>
+    Qué está pasando en el mundo, ahora. Ingesta de GDELT cada quince minutos, lago en
+    Parquet, almacén con dbt y un mapa en vivo. Y, de todo ello, la pieza que de verdad
+    importa: cuánta prensa cubre cada país por habitante, y qué conclusiones NO se pueden
+    sacar de esos datos.
+  </p>
+  <p class="ensena">
+    <b>Qué va a tener dentro:</b> Airflow · PySpark · dbt · Kafka · Parquet ·
+    datos abiertos CC0 que se actualizan cada quince minutos.
+  </p>
+</div>
+
+<h2 class="sec">Lo que viene después</h2>
+
+<div class="lista">
+  <div class="mini"><b>El precio de la luz</b><span>Predicción a 24 h que publica cada día de cuánto se equivocó ayer</span></div>
+  <div class="mini"><b>Sesenta años de clima</b><span>Qué se puede afirmar con una serie larga — y qué no</span></div>
+  <div class="mini"><b>Buscador semántico</b><span>RAG sobre noticias, con su tasa de acierto medida y publicada</span></div>
+  <div class="mini"><b>La Vega de Granada</b><span>Cambio de uso del suelo visto desde el satélite</span></div>
+  <div class="mini"><b>Datasets públicos</b><span>Datos que no existen en ningún sitio, documentados para citarlos</span></div>
+  <div class="mini"><b>Posiciones desde vídeo</b><span>Detección y homografía sobre un partido entero</span></div>
+</div>
+
+<footer>
+  Dos másteres en Big Data y Python por la UCAM. Busco trabajo de ingeniero de datos,
+  en remoto o en Granada.<br>
+  <a href="https://github.com/felixrr87">GitHub</a> ·
+  <a href="https://sportalyze.onrender.com">Sportalyze</a>
+</footer>
+
+</div>
+</body>
+</html>

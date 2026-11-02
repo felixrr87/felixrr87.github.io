@@ -1,0 +1,93 @@
+LA PÁGINA ÍNDICE — CÓMO PONERLA EN INTERNET
+═════════════════════════════════════════════════════════
+Gratis, sin tarjeta, y queda en una dirección que puedes
+poner en LinkedIn y en el currículum:
+
+        https://felixrr87.github.io
+
+
+POR QUÉ ASÍ Y NO DE OTRA FORMA
+─────────────────────────────────────────────────────────
+  GitHub Pages es gratis para siempre en repositorios
+  públicos. No caduca, no se duerme como Render, y no
+  pide tarjeta en ningún momento.
+
+  La página no carga NADA de fuera: ni tipografías de
+  Google, ni librerías de un CDN, ni JavaScript. Dos
+  archivos y se acabó. Eso significa que carga al
+  instante, funciona siempre y no depende de que un
+  tercero siga vivo dentro de dos años.
+
+
+LOS PASOS (5 minutos)
+─────────────────────────────────────────────────────────
+  1. En GitHub, crea un repositorio PÚBLICO con este
+     nombre EXACTO, con tu usuario delante:
+
+            felixrr87.github.io
+
+     El nombre no es decorativo: GitHub reconoce ese
+     patrón y publica el repositorio como tu página
+     personal. Con cualquier otro nombre, la dirección
+     saldría como felixrr87.github.io/loquesea.
+
+  2. Desde esta carpeta:
+
+        cd "~/Desktop/sportalyze completo/_PROYECTOS/felixrr87.github.io"
+        git init
+        git add .
+        git commit -m "Laboratorio público: Sportalyze y turnero"
+        git branch -M main
+        git remote add origin https://github.com/felixrr87/felixrr87.github.io.git
+        git push -u origin main
+
+  3. En el repositorio: Settings → Pages.
+     En "Source" elige "Deploy from a branch", rama main,
+     carpeta / (root). Guardar.
+
+  Tarda uno o dos minutos la primera vez. Luego entra en
+  https://felixrr87.github.io y compruébalo en el móvil
+  también, que es por donde va a entrar casi todo el
+  mundo desde LinkedIn.
+
+
+QUÉ HAY QUE CAMBIAR CUANDO PUBLIQUES turnero
+─────────────────────────────────────────────────────────
+  En index.html, en la tarjeta de turnero:
+
+   · Cambia el estado de "publicándose" a "en línea":
+         <span class="estado pronto">publicándose</span>
+     pasa a
+         <span class="estado vivo">en línea</span>
+
+   · Añade el enlace a PyPI, al principio de los enlaces:
+         <a href="https://pypi.org/project/turnero/">PyPI</a>
+
+  Y sube el cambio:
+        git add . && git commit -m "turnero publicado" && git push
+
+  En un minuto está actualizado. Cada proyecto nuevo se
+  añade copiando una tarjeta y cambiando el texto.
+
+
+LO QUE NO DICE LA PÁGINA, A PROPÓSITO
+─────────────────────────────────────────────────────────
+  No hay nada en construcción vendido como terminado. El
+  Observatorio pone "empezando" porque está empezando, y
+  los seis de abajo son titulares sin enlace porque
+  todavía no existen.
+
+  Es la misma regla que el resto: si no se puede
+  comprobar, se dice. Una página de portfolio que promete
+  seis cosas que no están es exactamente lo contrario de
+  lo que estamos construyendo.
+
+
+DESPUÉS
+─────────────────────────────────────────────────────────
+  · Pon la dirección en el titular de tu LinkedIn y en la
+    sección de destacados. Es un enlace, no un PDF: se
+    abre en el móvil de quien te esté mirando.
+
+  · Cuando alguien pregunte "¿qué sabes hacer?", esto se
+    contesta con un enlace en vez de con un párrafo.
