@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lo que la cámara vio — Félix Ramírez</title>
+<meta name="description" content="Una final entera, movida con el dedo. Con el control del espacio calculado en vivo, y pintado sólo donde la cámara miraba.">
+<link rel="icon" href="../logo.png">
+<style>
+/* ── La paleta es la de Sportalyze, para que esto y los gráficos de
+      LinkedIn se reconozcan como lo mismo sin leer el nombre. ───── */
+:root{
+  --bg:#0b1220; --panel:#131c2e; --linea:#1e2a42; --borde:#243247;
+  --texto:#e9edf3; --dim:#8b97ad; --tenue:#5a6579;
+  --acento:#0ea5e9; --oro:#e3b341;
+  --a:#38bdf8;   /* equipo 0 */
+  --b:#ff4d5e;   /* equipo 1 */
+  --cesped:#16233a;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--texto);
+  font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  padding:0 16px;overscroll-behavior-y:contain;
+}
+.marco{max-width:1000px;margin:0 auto;padding:22px 0 56px}
+
+header{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+header img{width:42px;height:auto;flex:0 0 auto}
+h1{font-size:23px;line-height:1.15;margin:0;font-weight:700;letter-spacing:-.01em}
+h1 span{color:var(--oro)}
+.sub{color:var(--dim);font-size:13.5px;margin:3px 0 0}
+
+/* ── El marcador de arriba ─────────────────────────────────── */
+.cab{
+  display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+  background:var(--panel);border:1px solid var(--borde);border-radius:11px;
+  padding:11px 14px;margin-bottom:10px;
+}
+.eq{display:flex;align-items:center;gap:7px;font-weight:700;font-size:14.5px}
+.pt{width:11px;height:11px;border-radius:50%;flex:0 0 auto}
+.pt.a{background:var(--a)} .pt.b{background:var(--b)}
+.reloj{
+  margin-left:auto;font-variant-numeric:tabular-nums;font-weight:700;
+  font-size:19px;letter-spacing:.01em;
+}
+.que{color:var(--dim);font-size:13px;width:100%;margin-top:2px}
+.que b{color:var(--texto);font-weight:600}
+
+/* ── El campo ──────────────────────────────────────────────── */
+.campo{
+  position:relative;background:var(--cesped);border:1px solid var(--borde);
+  border-radius:11px;overflow:hidden;touch-action:none;
+}
+canvas{display:block;width:100%;height:auto}
+.aviso{
+  position:absolute;left:10px;top:10px;right:10px;
+  display:flex;gap:7px;flex-wrap:wrap;pointer-events:none;
+}
+.chip{
+  background:rgba(11,18,32,.82);border:1px solid var(--borde);
+  border-radius:999px;padding:3px 10px;font-size:11.5px;color:var(--dim);
+  font-variant-numeric:tabular-nums;
+}
+.chip b{color:var(--texto)}
+.chip.ojo{border-color:rgba(227,179,65,.4);color:var(--oro)}
+
+/* ── Mandos ────────────────────────────────────────────────── */
+.mandos{margin-top:12px}
+input[type=range]{
+  -webkit-appearance:none;appearance:none;width:100%;height:28px;
+  background:transparent;cursor:pointer;display:block;
+}
+input[type=range]::-webkit-slider-runnable-track{
+  height:6px;border-radius:3px;background:var(--linea);
+}
+input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:var(--linea)}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:22px;height:22px;margin-top:-8px;
+  border-radius:50%;background:var(--acento);border:3px solid var(--bg);
+  box-shadow:0 0 0 1px var(--acento);
+}
+input[type=range]::-moz-range-thumb{
+  width:18px;height:18px;border-radius:50%;background:var(--acento);
+  border:3px solid var(--bg);
+}
+.botones{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:6px}
+button{
+  font:inherit;font-size:13.5px;color:var(--texto);background:var(--panel);
+  border:1px solid var(--borde);border-radius:8px;padding:7px 13px;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+}
+button:hover{border-color:var(--acento);color:var(--acento)}
+button.p{background:var(--acento);border-color:var(--acento);color:#06121f;font-weight:700;min-width:86px}
+button.p:hover{color:#06121f}
+.sep{flex:1}
+.hint{color:var(--tenue);font-size:12.5px}
+
+/* ── Lo que no se sabe ─────────────────────────────────────── */
+.metodo{
+  margin-top:26px;background:var(--panel);border:1px solid var(--borde);
+  border-left:3px solid var(--oro);border-radius:10px;padding:16px 18px;
+}
+.metodo h2{margin:0 0 8px;font-size:13px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--oro)}
+.metodo p{margin:0 0 10px;color:var(--dim);font-size:14px}
+.metodo p:last-child{margin-bottom:0}
+.metodo b{color:var(--texto)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;color:var(--acento)}
+
+footer{
+  margin-top:30px;padding-top:18px;border-top:1px solid var(--linea);
+  color:var(--tenue);font-size:13px;
+}
+footer a{color:var(--dim)}
+.cargando{padding:60px 0;text-align:center;color:var(--dim)}
+@media(max-width:560px){
+  h1{font-size:19px} header img{width:34px}
+  .reloj{font-size:17px}
+  .marco{padding:16px 0 40px}
+}
+</style>
+</head>
+<body>
+<div class="marco">
+
+<header>
+  <img src="../logo.png" alt="">
+  <div>
+    <h1>Lo que la cámara <span>vio</span>.</h1>
+    <p class="sub">Una final entera, movida con el dedo — y el control del espacio, en vivo.</p>
+  </div>
+</header>
+
+<div id="todo" hidden>
+  <div class="cab">
+    <div class="eq"><span class="pt a"></span><span id="eqA">—</span></div>
+    <div class="eq"><span class="pt b"></span><span id="eqB">—</span></div>
+    <div class="reloj" id="reloj">—</div>
+    <div class="que" id="que">—</div>
+  </div>
+
+  <div class="campo">
+    <canvas id="lienzo" width="1200" height="800"></canvas>
+    <div class="aviso">
+      <div class="chip ojo" id="chipVis">—</div>
+      <div class="chip" id="chipArea">—</div>
+      <div class="chip" id="chipCtrl">—</div>
+    </div>
+  </div>
+
+  <div class="mandos">
+    <input type="range" id="barra" min="0" max="0" value="0" step="1"
+           aria-label="momento del partido">
+    <div class="botones">
+      <button class="p" id="play">Reproducir</button>
+      <button id="ant">‹ Antes</button>
+      <button id="sig">Después ›</button>
+      <button id="tiro">Siguiente tiro</button>
+      <button id="gol">Siguiente gol</button>
+      <div class="sep"></div>
+      <button id="enlace">Copiar este momento</button>
+    </div>
+    <p class="hint" id="hint">Arrastra la barra. Cada parada es un instante real del partido.</p>
+  </div>
+</div>
+
+<div class="cargando" id="cargando">Cargando el partido…</div>
+
+<div class="metodo">
+  <h2>Lo que esto no sabe</h2>
+  <p>
+    <b>No son las 22 jugadoras.</b> Un marco de 360 de StatsBomb trae a las que
+    salían en el encuadre de la televisión en ese instante, no a todas. Por eso
+    arriba a la izquierda va, cambiando en cada momento, cuántas se ven de 22 y
+    qué porcentaje del campo cubría la cámara.
+  </p>
+  <p>
+    <b>El control del espacio se pinta sólo dentro de lo que se veía.</b> Fuera de
+    ese polígono hay jugadoras que no aparecen, y colorear quién domina una zona
+    sin saber quién está en ella no es un modelo: es un dibujo.
+  </p>
+  <p>
+    <b>El modelo, entero:</b> el tiempo que tarda una jugadora en llegar a un punto
+    es <code>distancia / 5 m/s</code>; el del equipo es el de su jugadora más
+    rápida; y el control es la logística de la diferencia entre los dos tiempos,
+    con <code>τ = 0,7 s</code>. Es la versión sin velocidades: los marcos traen
+    posición pero no hacia dónde iba cada una, así que se asume que todas parten
+    paradas. Con datos de seguimiento de verdad, las transiciones rápidas salen
+    distintas. Aquí no se puede, y se dice.
+  </p>
+  <p>
+    <b>Esto no es un vídeo.</b> Entre un instante y el siguiente no se enseña nada,
+    porque no se sabe: inventar el movimiento intermedio sería dibujar posiciones
+    que nadie midió.
+  </p>
+</div>
+
+<footer>
+  Datos: <a href="https://github.com/statsbomb/open-data">StatsBomb Open Data</a>,
+  con atribución. Los colores son míos, no los de las equipaciones.<br>
+  Félix Ramírez · <a href="https://felixrr87.github.io">felixrr87.github.io</a>
+</footer>
+
+</div>
+
+<script>
+(() => {
+"use strict";
+
+// ── El campo de StatsBomb mide 120x80 ─────────────────────────
+const LARGO = 120, ANCHO = 80;
+// Y de verdad 105x68: para medir distancias hay que pasar a metros,
+// porque las dos escalas no son iguales. Medir en unidades de
+// StatsBomb estira el campo un 2% a lo ancho y el control sale torcido.
+const LARGO_M = 105, ANCHO_M = 68;
+const V_MAX = 5.0, TAU = 0.7;
+
+// La rejilla del control. Con paso 2 son 61x41 = 2.501 puntos por
+// fotograma: se calcula en un par de milisegundos y se ve igual de
+// bien, porque luego se escala con suavizado.
+const PASO = 2;
+const NX = Math.floor(LARGO / PASO) + 1, NY = Math.floor(ANCHO / PASO) + 1;
+
+const $ = id => document.getElementById(id);
+const lienzo = $("lienzo"), ctx = lienzo.getContext("2d");
+let D = null, i = 0, tocando = false, timer = null;
+
+// Capa del control: se dibuja pequeña y se escala.
+const capa = document.createElement("canvas");
+capa.width = NX; capa.height = NY;
+const cctx = capa.getContext("2d");
+const img = cctx.createImageData(NX, NY);
+
+// ── Geometría ─────────────────────────────────────────────────
+const px = x => x / LARGO * lienzo.width;
+const py = y => y / ANCHO * lienzo.height;
+
+function dentro(x, y, a) {
+  // Punto en polígono por lanzamiento de rayo. `a` viene plano:
+  // [x0,y0,x1,y1,...]
+  let d = false;
+  for (let k = 0, j = a.length - 2; k < a.length; j = k, k += 2) {
+    const xi = a[k], yi = a[k+1], xj = a[j], yj = a[j+1];
+    if ((yi > y) !== (yj > y) &&
+        x < (xj - xi) * (y - yi) / (yj - yi) + xi) d = !d;
+  }
+  return d;
+}
+
+// ── El control del espacio, igual que en control.py ───────────
+function pintarControl(f) {
+  const A = [], B = [];
+  for (const p of f.j) (p[2] === 0 ? A : B).push(p);
+  const dat = img.data;
+  let visibles = 0, controlA = 0, dentroN = 0;
+
+  for (let gy = 0; gy < NY; gy++) {
+    const y = gy * PASO, ym = y * ANCHO_M / ANCHO;
+    for (let gx = 0; gx < NX; gx++) {
+      const o = (gy * NX + gx) * 4;
+      const x = gx * PASO;
+      if (!f.a.length || !dentro(x, y, f.a)) { dat[o+3] = 0; continue; }
+      visibles++;
+      const xm = x * LARGO_M / LARGO;
+
+      let ta = Infinity, tb = Infinity;
+      for (const p of A) {
+        const dx = xm - p[0] * LARGO_M / LARGO, dy = ym - p[1] * ANCHO_M / ANCHO;
+        const t = Math.sqrt(dx*dx + dy*dy) / V_MAX;
+        if (t < ta) ta = t;
+      }
+      for (const p of B) {
+        const dx = xm - p[0] * LARGO_M / LARGO, dy = ym - p[1] * ANCHO_M / ANCHO;
+        const t = Math.sqrt(dx*dx + dy*dy) / V_MAX;
+        if (t < tb) tb = t;
+      }
+      let c;
+      if (!isFinite(ta) && !isFinite(tb)) c = 0.5;
+      else if (!isFinite(ta)) c = 0;
+      else if (!isFinite(tb)) c = 1;
+      else c = 1 / (1 + Math.exp(-(tb - ta) / TAU));
+
+      dentroN++; if (c > 0.5) controlA++;
+      // Azul si manda el equipo 0, rojo si el 1. La transparencia
+      // crece con lo claro que esté: una zona disputada casi no se ve.
+      const fuerza = Math.abs(c - 0.5) * 2;
+      if (c >= 0.5) { dat[o] = 56; dat[o+1] = 189; dat[o+2] = 248; }
+      else          { dat[o] = 255; dat[o+1] = 77; dat[o+2] = 94;  }
+      dat[o+3] = Math.round(26 + 120 * fuerza);
+    }
+  }
+  cctx.putImageData(img, 0, 0);
+  ctx.save();
+  ctx.imageSmoothingEnabled = true;
+  ctx.drawImage(capa, 0, 0, lienzo.width, lienzo.height);
+  ctx.restore();
+  return { visibles: visibles / (NX * NY), controlA: dentroN ? controlA / dentroN : null };
+}
+
+// ── El campo ──────────────────────────────────────────────────
+function pintarCampo() {
+  ctx.fillStyle = "#16233a";
+  ctx.fillRect(0, 0, lienzo.width, lienzo.height);
+  ctx.strokeStyle = "rgba(233,237,243,.22)";
+  ctx.lineWidth = Math.max(1.5, lienzo.width / 600);
+  const R = (x, y, w, h) => ctx.strokeRect(px(x), py(y), px(w), py(h));
+  R(0, 0, LARGO, ANCHO);
+  ctx.beginPath(); ctx.moveTo(px(60), py(0)); ctx.lineTo(px(60), py(80)); ctx.stroke();
+  ctx.beginPath(); ctx.arc(px(60), py(40), px(10), 0, 7); ctx.stroke();
+  R(0, 18, 18, 44); R(102, 18, 18, 44);      // áreas grandes
+  R(0, 30, 6, 20);  R(114, 30, 6, 20);       // áreas pequeñas
+  ctx.beginPath(); ctx.arc(px(12), py(40), 2.5, 0, 7); ctx.fillStyle = "rgba(233,237,243,.35)"; ctx.fill();
+  ctx.beginPath(); ctx.arc(px(108), py(40), 2.5, 0, 7); ctx.fill();
+}
+
+function pintarVision(f) {
+  if (!f.a.length) return;
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(px(f.a[0]), py(f.a[1]));
+  for (let k = 2; k < f.a.length; k += 2) ctx.lineTo(px(f.a[k]), py(f.a[k+1]));
+  ctx.closePath();
+  ctx.strokeStyle = "rgba(227,179,65,.55)";
+  ctx.setLineDash([8, 7]);
+  ctx.lineWidth = Math.max(1.5, lienzo.width / 700);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function pintarJugadoras(f) {
+  const r = Math.max(6, lienzo.width / 105);
+  for (const p of f.j) {
+    const [x, y, eq, ban] = p;
+    const portera = (ban & 1) === 1, actora = (ban & 2) === 2;
+    ctx.beginPath();
+    ctx.arc(px(x), py(y), portera ? r * 1.05 : r, 0, 7);
+    ctx.fillStyle = eq === 0 ? "#38bdf8" : "#ff4d5e";
+    ctx.fill();
+    if (portera) {
+      ctx.lineWidth = Math.max(2, r * .32);
+      ctx.strokeStyle = "#e3b341"; ctx.stroke();
+    }
+    if (actora) {
+      ctx.beginPath(); ctx.arc(px(x), py(y), r * 1.9, 0, 7);
+      ctx.lineWidth = Math.max(1.6, r * .22);
+      ctx.strokeStyle = "rgba(233,237,243,.85)"; ctx.stroke();
+    }
+  }
+  if (f.b) {
+    ctx.beginPath(); ctx.arc(px(f.b[0]), py(f.b[1]), r * .62, 0, 7);
+    ctx.fillStyle = "#e9edf3"; ctx.fill();
+    ctx.lineWidth = Math.max(1.5, r * .2); ctx.strokeStyle = "#0b1220"; ctx.stroke();
+  }
+}
+
+// ── Pintar un instante ────────────────────────────────────────
+function ir(n, mover = true) {
+  i = Math.max(0, Math.min(D.f.length - 1, n));
+  const f = D.f[i];
+  pintarCampo();
+  const m = pintarControl(f);
+  pintarVision(f);
+  pintarJugadoras(f);
+
+  const mm = String(f.m).padStart(2, "0"), ss = String(f.s).padStart(2, "0");
+  $("reloj").textContent = `${mm}:${ss}`;
+  $("que").innerHTML = `<b>${f.k}</b>${f.n ? " · " + f.n : ""} · ` +
+      `${D.equipos[f.e]}${f.x === 2 ? " · <b style='color:#3fb950'>GOL</b>" :
+                           f.x === 1 ? " · <b>tiro</b>" : ""}`;
+  $("chipVis").innerHTML = `<b>${f.j.length}</b> de 22 jugadoras`;
+  $("chipArea").innerHTML = `<b>${Math.round(m.visibles * 100)} %</b> del campo visible`;
+  $("chipCtrl").innerHTML = m.controlA === null ? "—" :
+      `<b>${Math.round(m.controlA * 100)} %</b> de lo visible: ${D.equipos[0]}`;
+  if (mover) $("barra").value = i;
+  if (history.replaceState) history.replaceState(null, "", "#" + i);
+}
+
+// ── Mandos ────────────────────────────────────────────────────
+function play(si) {
+  if (timer) { clearInterval(timer); timer = null; }
+  $("play").textContent = si ? "Pausa" : "Reproducir";
+  if (!si) return;
+  timer = setInterval(() => {
+    if (i >= D.f.length - 1) { play(false); return; }
+    ir(i + 1);
+  }, 320);     // un instante cada tercio de segundo: se sigue con la vista
+}
+
+function siguiente(lista) {
+  const n = lista.find(k => k > i);
+  ir(n === undefined ? (lista[0] ?? i) : n);
+}
+
+$("barra").addEventListener("input", e => { play(false); ir(+e.target.value, false); });
+$("play").addEventListener("click", () => play(!timer));
+$("ant").addEventListener("click", () => { play(false); ir(i - 1); });
+$("sig").addEventListener("click", () => { play(false); ir(i + 1); });
+$("tiro").addEventListener("click", () => { play(false); siguiente(D.tiros); });
+$("gol").addEventListener("click", () => { play(false); siguiente(D.goles); });
+$("enlace").addEventListener("click", async () => {
+  const url = location.href.split("#")[0] + "#" + i;
+  try { await navigator.clipboard.writeText(url); $("enlace").textContent = "Copiado"; }
+  catch (e) { $("enlace").textContent = "Copia la barra de arriba"; }
+  setTimeout(() => $("enlace").textContent = "Copiar este momento", 1800);
+});
+addEventListener("keydown", e => {
+  if (e.key === "ArrowLeft") { play(false); ir(i - 1); }
+  if (e.key === "ArrowRight") { play(false); ir(i + 1); }
+  if (e.key === " ") { e.preventDefault(); play(!timer); }
+});
+
+// ── Arrancar ──────────────────────────────────────────────────
+fetch("partido.json")
+  .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  .then(d => {
+    D = d;
+    $("eqA").textContent = D.equipos[0];
+    $("eqB").textContent = D.equipos[1];
+    $("barra").max = D.f.length - 1;
+    $("cargando").hidden = true;
+    $("todo").hidden = false;
+    const n = parseInt(location.hash.slice(1), 10);
+    ir(Number.isFinite(n) ? n : 0);
+    $("hint").textContent =
+      `${D.f.length} instantes reales, de ${D.f[0].m}:${String(D.f[0].s).padStart(2,"0")} ` +
+      `a ${D.f[D.f.length-1].m}:${String(D.f[D.f.length-1].s).padStart(2,"0")}. ` +
+      `Flechas ← → para ir uno a uno.`;
+  })
+  .catch(err => {
+    // Si falta el fichero se dice, no se deja la pantalla en blanco
+    // pensando que carga.
+    $("cargando").innerHTML =
+      "No he podido cargar <code>partido.json</code> (" + err.message + ").<br>" +
+      "Si estás abriendo el fichero con doble clic, el navegador no deja " +
+      "leerlo: hace falta servirlo.";
+  });
+})();
+</script>
+</body>
+</html>
