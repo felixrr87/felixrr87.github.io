@@ -129,7 +129,7 @@ footer a{color:var(--dim)}
   <img src="../logo.png" alt="">
   <div>
     <h1>Lo que la cámara <span>vio</span>.</h1>
-    <p class="sub">Una final entera, movida con el dedo — y el control del espacio, en vivo.</p>
+    <p class="sub">La final de la Eurocopa femenina, movida con el dedo — y el control del espacio, en vivo.</p>
   </div>
 </header>
 
@@ -139,6 +139,13 @@ footer a{color:var(--dim)}
     <div class="eq"><span class="pt b"></span><span id="eqB">—</span></div>
     <div class="reloj" id="reloj">—</div>
     <div class="que" id="que">—</div>
+    <!-- Qué partido es. Faltaba, y es lo primero que pregunta
+         cualquiera que llegue aquí desde un enlace. -->
+    <div class="que" id="cual">
+      <b>Final de la Eurocopa femenina 2025</b> · 27 de julio de 2025 ·
+      St. Jakob-Park, Basilea · 1-1, Inglaterra ganó en los penaltis ·
+      árbitra: Stéphanie Frappart
+    </div>
   </div>
 
   <div class="campo">
@@ -182,6 +189,13 @@ footer a{color:var(--dim)}
     sin saber quién está en ella no es un modelo: es un dibujo.
   </p>
   <p>
+    <b>Los puntos no tienen nombre, y no es un olvido.</b> Cada jugadora de un
+    marco de 360 trae cuatro cosas: de qué equipo es, si es portera, si lleva el
+    balón y dónde está. Nombre, dorsal o identificador, no. El único nombre que
+    aparece es el de quien ejecuta la acción, y ése sale del evento, no del
+    marco. Poner los otros trece sería inventármelos.
+  </p>
+  <p>
     <b>El modelo, entero:</b> el tiempo que tarda una jugadora en llegar a un punto
     es <code>distancia / 5 m/s</code>; el del equipo es el de su jugadora más
     rápida; y el control es la logística de la diferencia entre los dos tiempos,
@@ -194,6 +208,12 @@ footer a{color:var(--dim)}
     <b>Esto no es un vídeo.</b> Entre un instante y el siguiente no se enseña nada,
     porque no se sabe: inventar el movimiento intermedio sería dibujar posiciones
     que nadie midió.
+  </p>
+  <p>
+    <b>Por qué este partido y no uno de ayer.</b> Los datos de posición abiertos
+    con marcos de 360 existen para doce competiciones, y la más reciente es
+    justo ésta: la Eurocopa femenina de 2025. No hay nada más nuevo que sea
+    gratis. Del torneo entero hay 31 partidos y los 31 tienen estos datos.
   </p>
 </div>
 
@@ -288,7 +308,9 @@ function pintarControl(f) {
       const fuerza = Math.abs(c - 0.5) * 2;
       if (c >= 0.5) { dat[o] = 56; dat[o+1] = 189; dat[o+2] = 248; }
       else          { dat[o] = 255; dat[o+1] = 77; dat[o+2] = 94;  }
-      dat[o+3] = Math.round(26 + 120 * fuerza);
+      // Sobre el césped verde hace falta más fuerza que sobre el
+      // fondo oscuro de antes: con 26 el rojo se volvía marrón.
+      dat[o+3] = Math.round(44 + 140 * fuerza);
     }
   }
   cctx.putImageData(img, 0, 0);
@@ -300,19 +322,75 @@ function pintarControl(f) {
 }
 
 // ── El campo ──────────────────────────────────────────────────
+//
+// Antes esto era un esquema: fondo azul oscuro y cuatro rectángulos.
+// Se parecía a un diagrama de arquitectura, no a un partido, y lo
+// primero que pregunta quien lo abre es «¿esto qué es?». Ahora hay
+// césped con las franjas del corte, líneas blancas, porterías y
+// córners. El dato no cambia; lo que cambia es que se reconoce.
 function pintarCampo() {
-  ctx.fillStyle = "#16233a";
-  ctx.fillRect(0, 0, lienzo.width, lienzo.height);
-  ctx.strokeStyle = "rgba(233,237,243,.22)";
-  ctx.lineWidth = Math.max(1.5, lienzo.width / 600);
+  const W = lienzo.width, H = lienzo.height;
+  ctx.fillStyle = "#13341f";
+  ctx.fillRect(0, 0, W, H);
+
+  // Las franjas del cortacésped. Seis, como en un campo de verdad.
+  const n = 6, ancho = LARGO / n;
+  for (let k = 0; k < n; k++) {
+    ctx.fillStyle = k % 2 ? "#164a2a" : "#13401f";
+    ctx.fillRect(px(k * ancho), 0, px(ancho) + 1, H);
+  }
+
+  ctx.strokeStyle = "rgba(255,255,255,.52)";
+  ctx.lineWidth = Math.max(1.6, W / 560);
+  ctx.lineCap = "butt";
   const R = (x, y, w, h) => ctx.strokeRect(px(x), py(y), px(w), py(h));
   R(0, 0, LARGO, ANCHO);
   ctx.beginPath(); ctx.moveTo(px(60), py(0)); ctx.lineTo(px(60), py(80)); ctx.stroke();
   ctx.beginPath(); ctx.arc(px(60), py(40), px(10), 0, 7); ctx.stroke();
   R(0, 18, 18, 44); R(102, 18, 18, 44);      // áreas grandes
   R(0, 30, 6, 20);  R(114, 30, 6, 20);       // áreas pequeñas
-  ctx.beginPath(); ctx.arc(px(12), py(40), 2.5, 0, 7); ctx.fillStyle = "rgba(233,237,243,.35)"; ctx.fill();
-  ctx.beginPath(); ctx.arc(px(108), py(40), 2.5, 0, 7); ctx.fill();
+
+  // Puntos de penalti y del centro
+  ctx.fillStyle = "rgba(255,255,255,.72)";
+  for (const x of [12, 60, 108]) {
+    ctx.beginPath(); ctx.arc(px(x), py(40), Math.max(2, W / 420), 0, 7); ctx.fill();
+  }
+
+  // Los semicírculos del área, que son lo que más dice «esto es un campo»
+  ctx.beginPath(); ctx.arc(px(12), py(40), px(10), -0.93, 0.93); ctx.stroke();
+  ctx.beginPath(); ctx.arc(px(108), py(40), px(10), Math.PI - 0.93, Math.PI + 0.93); ctx.stroke();
+
+  // Córners
+  const rc = px(1.2);
+  for (const [cx, cy, a] of [[0,0,0],[0,ANCHO,-Math.PI/2],[LARGO,0,Math.PI/2],[LARGO,ANCHO,Math.PI]]) {
+    ctx.beginPath(); ctx.arc(px(cx), py(cy), rc, a, a + Math.PI/2); ctx.stroke();
+  }
+
+  // Porterías, por fuera de la línea
+  ctx.lineWidth = Math.max(2.5, W / 340);
+  ctx.strokeStyle = "rgba(255,255,255,.85)";
+  ctx.strokeRect(px(-2.4), py(36), px(2.4), py(8));
+  ctx.strokeRect(px(LARGO), py(36), px(2.4), py(8));
+}
+
+// Quién es quién, escrito en el campo. En la primera versión sólo
+// estaba en la leyenda de arriba y había que acordarse de qué color
+// era cada una mientras mirabas el dibujo.
+function pintarEquipos() {
+  const t = Math.max(12, lienzo.width / 52);
+  ctx.save();
+  ctx.font = `700 ${t}px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif`;
+  // ABAJO, no arriba: arriba se los comían las etiquetas de
+  // «13 de 22 jugadoras» y compañía, que van flotando sobre el campo.
+  ctx.textBaseline = "bottom";
+  ctx.shadowColor = "rgba(0,0,0,.8)"; ctx.shadowBlur = 7;
+
+  ctx.fillStyle = "#38bdf8"; ctx.textAlign = "left";
+  ctx.fillText(`${D.equipos[0]}  →`, px(2.5), py(ANCHO - 2.2));
+
+  ctx.fillStyle = "#ff4d5e"; ctx.textAlign = "right";
+  ctx.fillText(`←  ${D.equipos[1]}`, px(LARGO - 2.5), py(ANCHO - 2.2));
+  ctx.restore();
 }
 
 function pintarVision(f) {
@@ -331,27 +409,61 @@ function pintarVision(f) {
 
 function pintarJugadoras(f) {
   const r = Math.max(6, lienzo.width / 105);
+  let conBalon = null;
+
   for (const p of f.j) {
     const [x, y, eq, ban] = p;
     const portera = (ban & 1) === 1, actora = (ban & 2) === 2;
+
+    // Sombra: es lo que hace que los puntos se despeguen del césped
+    // y parezcan jugadoras en vez de pegatinas.
     ctx.beginPath();
-    ctx.arc(px(x), py(y), portera ? r * 1.05 : r, 0, 7);
-    ctx.fillStyle = eq === 0 ? "#38bdf8" : "#ff4d5e";
+    ctx.ellipse(px(x) + r * .22, py(y) + r * .42, r * .95, r * .55, 0, 0, 7);
+    ctx.fillStyle = "rgba(0,0,0,.33)"; ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(px(x), py(y), r, 0, 7);
+    ctx.fillStyle = portera ? "#e3b341" : (eq === 0 ? "#38bdf8" : "#ff4d5e");
     ctx.fill();
-    if (portera) {
-      ctx.lineWidth = Math.max(2, r * .32);
-      ctx.strokeStyle = "#e3b341"; ctx.stroke();
-    }
+    ctx.lineWidth = Math.max(1.4, r * .2);
+    ctx.strokeStyle = portera
+      ? (eq === 0 ? "#38bdf8" : "#ff4d5e")       // su equipo, en el borde
+      : "rgba(255,255,255,.75)";
+    ctx.stroke();
+
     if (actora) {
-      ctx.beginPath(); ctx.arc(px(x), py(y), r * 1.9, 0, 7);
-      ctx.lineWidth = Math.max(1.6, r * .22);
-      ctx.strokeStyle = "rgba(233,237,243,.85)"; ctx.stroke();
+      conBalon = [x, y];
+      ctx.beginPath(); ctx.arc(px(x), py(y), r * 1.75, 0, 7);
+      ctx.lineWidth = Math.max(1.8, r * .26);
+      ctx.strokeStyle = "#ffffff"; ctx.stroke();
     }
   }
+
   if (f.b) {
-    ctx.beginPath(); ctx.arc(px(f.b[0]), py(f.b[1]), r * .62, 0, 7);
-    ctx.fillStyle = "#e9edf3"; ctx.fill();
-    ctx.lineWidth = Math.max(1.5, r * .2); ctx.strokeStyle = "#0b1220"; ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(px(f.b[0]), py(f.b[1]), r * .58, 0, 7);
+    ctx.fillStyle = "#ffffff"; ctx.fill();
+    ctx.lineWidth = Math.max(1.4, r * .2);
+    ctx.strokeStyle = "#0b1220"; ctx.stroke();
+  }
+
+  // EL ÚNICO NOMBRE QUE SE PUEDE PONER.
+  //
+  // Los marcos de 360 traen las posiciones ANÓNIMAS: cada punto sólo
+  // dice si es compañera, si es portera y si tiene el balón. Nombre,
+  // dorsal o identificador no hay. Lo comprobé dentro del fichero.
+  // De quien sí se sabe el nombre es de la que ejecuta la acción,
+  // porque eso viene del evento, no del marco. Así que se escribe
+  // ése y no se inventa ninguno más.
+  if (conBalon && f.n) {
+    const t = Math.max(11, lienzo.width / 62);
+    ctx.save();
+    ctx.font = `700 ${t}px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif`;
+    ctx.textAlign = "center"; ctx.textBaseline = "bottom";
+    ctx.shadowColor = "rgba(0,0,0,.85)"; ctx.shadowBlur = 7;
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText(f.n, px(conBalon[0]), py(conBalon[1]) - r * 2.3);
+    ctx.restore();
   }
 }
 
@@ -362,6 +474,7 @@ function ir(n, mover = true) {
   pintarCampo();
   const m = pintarControl(f);
   pintarVision(f);
+  pintarEquipos();
   pintarJugadoras(f);
 
   const mm = String(f.m).padStart(2, "0"), ss = String(f.s).padStart(2, "0");
