@@ -158,8 +158,14 @@ footer a{color:var(--dim)}
   </div>
 
   <div class="mandos">
+    <!-- autocomplete="off" no es un adorno: sin él, Chrome restaura
+         el valor que tenía la barra en la visita anterior y PISA el
+         del enlace. Pedías el #2125 y la página abría en el 921, que
+         es justo el momento en el que te habías quedado antes. Un
+         enlace a un instante que no lleva a ese instante es peor que
+         no tener enlaces. -->
     <input type="range" id="barra" min="0" max="0" value="0" step="1"
-           aria-label="momento del partido">
+           autocomplete="off" aria-label="momento del partido">
     <div class="botones">
       <button class="p" id="play">Reproducir</button>
       <button id="ant">‹ Antes</button>
